@@ -53,8 +53,7 @@ namespace GXVCU.Api
                 c.SwaggerEndpoint("swagger/v1/swagger.json", "My V1 Api");
                 c.RoutePrefix = "";
             });
-            app.UseQuartzJobMildd(qzServices, schedulerCenter);
-
+           
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -65,6 +64,8 @@ namespace GXVCU.Api
             {
                 endpoints.MapControllers();
             });
+
+            app.UseQuartzJobMildd(qzServices, schedulerCenter);
         }
     }
 }

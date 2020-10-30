@@ -23,6 +23,10 @@ namespace GXVCU.Api.Controllers.V1
             _qzServices = qzServices;
         }
 
+        /// <summary>
+        /// 获取所以的任务
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [CustomRoute(ApiVersions.V1, "GetJobs")]
         public async Task<MessageModel<object>> GetJobs()
@@ -30,6 +34,20 @@ namespace GXVCU.Api.Controllers.V1
             return new MessageModel<object>()
             {
                 Response = await _qzServices.GetTasks(),
+            };
+        }
+
+        /// <summary>
+        /// 查找任务
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "SelectJob")]
+        public async Task<MessageModel<object>> SelectJob(int jobId)
+        {
+            return new MessageModel<object>()
+            {
+                Response = await _qzServices.SelectJob(jobId)
             };
         }
 

@@ -13,15 +13,13 @@ namespace GXVCU.Api.Controllers.V2
     [ApiController]
     public class ApbController : ControllerBase
     {
-        private readonly ISqlSugarClient _sqlSugarClient;
         private readonly ILogger<ApbController> _logger;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ApbController(ISqlSugarClient sqlSugarClient,ILogger<ApbController> logger)
+        public ApbController(ILogger<ApbController> logger)
         {
-            _sqlSugarClient = sqlSugarClient;
             _logger = logger;
         }
 
@@ -32,24 +30,7 @@ namespace GXVCU.Api.Controllers.V2
             return new string[] { "第二版的 apbs" };
         }
 
-        [HttpPost]
-        [CustomRoute(ApiVersions.V2, "GetMTOC")]
-        public MessageModel<object> GetMTOC()
-        {
-            MessageModel<object> rep = new MessageModel<object>();
-            rep.Success = false;
-            try
-            {
-                rep.Response = _sqlSugarClient.Queryable<MTOC>().ToList();
-                rep.Success = true;
-            }
-            catch (Exception ex)
-            {
-                rep.Msg = ex.Message; 
-                _logger.LogError(ex, "数据库查询失败");
-            }
-            return rep;
-        }
+        
 
        
     }

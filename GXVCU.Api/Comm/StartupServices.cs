@@ -27,21 +27,30 @@ namespace GXVCU.Api.Comm
         public static void AddSqlsugarSetup(this IServiceCollection services, IConfiguration configuration)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-
-            var m =new Appsettings(configuration).MainDB.CurrentDb();
-            // 把多个连接对象注入服务，这里必须采用Scope，因为有事务操作
-            services.AddScoped<ISqlSugarClient>(o =>
+            try
             {
-                return new SqlSugarClient(new ConnectionConfig()
+                var m = new Appsettings(configuration).MainDB.CurrentDb();
+                // 把多个连接对象注入服务，这里必须采用Scope，因为有事务操作
+                services.AddScoped<ISqlSugarClient>(o =>
                 {
-                    ConfigId = m.ConnId.ObjToString().ToLower(),
-                    ConnectionString = m.Connection,
-                    DbType = (SqlSugar.DbType)m.DbType,
-                    IsAutoCloseConnection = true,
-                    IsShardSameThread = true,
-                    InitKeyType=InitKeyType.Attribute,
+                    return new SqlSugarClient(new ConnectionConfig()
+                    {
+                        ConfigId = m.ConnId.ObjToString().ToLower(),
+                        ConnectionString = m.Connection,
+                        DbType = (SqlSugar.DbType)m.DbType,
+                        IsAutoCloseConnection = true,
+                        IsShardSameThread = true,
+                        InitKeyType = InitKeyType.Attribute,
+                    });
                 });
-            });
+                Console.WriteLine("启动 SqlSugar 服务");
+                log.Info("启动 SqlSugar 服务");
+            }
+            catch (Exception ex)
+            {
+                log.Error("启动 SqlSugar 服务失败", ex);
+            }
+            
         }
 
         /// <summary>
@@ -51,8 +60,18 @@ namespace GXVCU.Api.Comm
         public static void AddCommSetup(this IServiceCollection services, IConfiguration configuration)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped(o => { return new Appsettings(configuration); });
+            try
+            {
+                services.AddScoped(o => { return new Appsettings(configuration); });
+                Console.WriteLine("启动配置服务");
+                log.Info("启动配置服务");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("启动配置服务失败");
+                log.Error("启动配置服务",ex);
+            }
+            
         }
 
         /// <summary>
@@ -62,12 +81,21 @@ namespace GXVCU.Api.Comm
         public static void AddJobSetup(this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
+            try
+            {
+                // 任务调度
+                services.AddSingleton<IJobFactory, JobFactory>();
+                services.AddSingleton<SchedulerCenterServer>();
+                services.AddTransient<Job_Blogs_Quartz>();
 
-            // 任务调度
-            services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddSingleton<SchedulerCenterServer>();
-            services.AddTransient<Job_Blogs_Quartz>();
-
+                Console.WriteLine("添加定时任务");
+                log.Info("添加定时任务");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("添加定时任务失败");
+                log.Info("添加定时任务失败",ex);
+            }
         }
 
         /// <summary>
@@ -89,7 +117,7 @@ namespace GXVCU.Api.Comm
             }
             catch (Exception ex)
             {
-                log.Error("添加程序集失败", ex);
+                log.Error("添加程序集依赖注入失败", ex);
             }
             
             
