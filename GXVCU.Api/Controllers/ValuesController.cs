@@ -34,13 +34,10 @@ namespace GXVCU.Api.Controllers
         [HttpPost("logger")]
         public void Logger([FromBody] LogEntity logEntity)
         {
+            Console.WriteLine("POST api/values/Logger msg:" + logEntity.Messager);
             _logger.LogInformation("POST api/values/Logger msg:"+logEntity.Messager);
             _logger.LogError("POST api/values/Logger msg:" + logEntity.Messager);
         }
-
-        
-
-       
 
     }
 }

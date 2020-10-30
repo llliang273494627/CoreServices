@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +24,16 @@ namespace GXVCU.Api
                 {
                     webBuilder.UseStartup<Startup>();
 
-                    webBuilder.ConfigureLogging(c => {
+                    //webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
+                    //webBuilder.UseKestrel();
+                    //webBuilder.UseIISIntegration();
+                    //webBuilder.ConfigureKestrel((c, s) =>
+                    //{
+                    //    s.Listen(IPAddress.Loopback, 8082);
+                    //});
 
+                    webBuilder.ConfigureLogging(c =>
+                    {
                         c.AddLog4Net();
                     });
                 });
