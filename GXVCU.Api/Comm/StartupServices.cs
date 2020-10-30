@@ -43,7 +43,6 @@ namespace GXVCU.Api.Comm
                         InitKeyType = InitKeyType.Attribute,
                     });
                 });
-                Console.WriteLine("启动 SqlSugar 服务");
                 log.Info("启动 SqlSugar 服务");
             }
             catch (Exception ex)
@@ -63,12 +62,10 @@ namespace GXVCU.Api.Comm
             try
             {
                 services.AddScoped(o => { return new Appsettings(configuration); });
-                Console.WriteLine("启动配置服务");
                 log.Info("启动配置服务");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("启动配置服务失败");
                 log.Error("启动配置服务",ex);
             }
             
@@ -88,12 +85,10 @@ namespace GXVCU.Api.Comm
                 services.AddSingleton<SchedulerCenterServer>();
                 services.AddTransient<Job_Blogs_Quartz>();
 
-                Console.WriteLine("添加定时任务");
                 log.Info("添加定时任务");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("添加定时任务失败");
                 log.Info("添加定时任务失败",ex);
             }
         }

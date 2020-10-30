@@ -19,12 +19,10 @@ namespace GXVCU.Api.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly ILogger<ValuesController> _logger;
-        private ISqlSugarClient _sqlSugarClient;
 
-        public ValuesController(ILogger<ValuesController> logger,ISqlSugarClient sqlSugarClient,Appsettings appsettings)
+        public ValuesController(ILogger<ValuesController> logger)
         {
             _logger = logger;
-            _sqlSugarClient = sqlSugarClient;
         }
 
         /// <summary>
@@ -34,9 +32,8 @@ namespace GXVCU.Api.Controllers
         [HttpPost("logger")]
         public void Logger([FromBody] LogEntity logEntity)
         {
-            Console.WriteLine("POST api/values/Logger msg:" + logEntity.Messager);
-            _logger.LogInformation("POST api/values/Logger msg:"+logEntity.Messager);
-            _logger.LogError("POST api/values/Logger msg:" + logEntity.Messager);
+            _logger.LogInformation("LogInformation :" + logEntity.Messager);
+            _logger.LogError("LogError msg:" + logEntity.Messager);
         }
 
     }

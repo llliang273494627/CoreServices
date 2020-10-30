@@ -32,12 +32,10 @@ namespace GXVCU.Api.Comm
                         var ResuleModel = schedulerCenter.AddScheduleJobAsync(item).Result;
                         if (ResuleModel.Success)
                         {
-                            Console.WriteLine($"任务ID:{item .Id} 任务名称:{item.Name}启动成功！");
                             log.Info($"任务ID:{item.Id} 任务名称:{item.Name}启动成功！");
                         }
                         else
                         {
-                            Console.WriteLine($"任务ID:{item.Id} 任务名称:{item.Name}启动失败！错误信息：{ResuleModel.Msg}");
                             log.Error($"任务ID:{item.Id} 任务名称:{item.Name}启动失败！错误信息:{ResuleModel.Msg}");
                         }
                     }
