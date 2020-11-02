@@ -24,14 +24,6 @@ namespace GXVCU.Api
                 {
                     webBuilder.UseStartup<Startup>();
 
-                    //webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
-                    //webBuilder.UseKestrel();
-                    //webBuilder.UseIISIntegration();
-                    //webBuilder.ConfigureKestrel((c, s) =>
-                    //{
-                    //    s.Listen(IPAddress.Loopback, 8082);
-                    //});
-
                     webBuilder.ConfigureLogging(c =>
                     {
                         c.AddLog4Net();
