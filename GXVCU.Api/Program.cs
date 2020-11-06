@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,8 +22,14 @@ namespace GXVCU.Api
                 {
                     webBuilder.UseStartup<Startup>();
 
+                    // 添加log4net日志
                     webBuilder.ConfigureLogging(c =>
                     {
+                        // 过滤类别
+                        c.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
+                        c.AddFilter("Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware", LogLevel.None);
+                        // 添加控制台输出
+                        c.AddConsole();
                         c.AddLog4Net();
                     });
                 });
