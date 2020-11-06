@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GXVCU.Common.FromBodys
 {
-    public class MainDBEntity
+    public class TableEntity
     {
         /// <summary>
         /// 表实体文件夹路径

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using GXVCU.Common;
+using GXVCU.Common.FromBodys;
 using GXVCU.Model.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,17 +32,21 @@ namespace GXVCU.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetConnectionString")]
-        public string GetConnectionString()
+        public MessageModel<string> GetConnectionString()
         {
+            var data = new MessageModel<string>();
             try
             {
-                return _sqlSugarClient.Ado.Connection.ConnectionString;
+                data.Response = _sqlSugarClient.Ado.Connection.ConnectionString;
+                data.Success = true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "查询数据库连接字段失败");
+                data.Success = false;
+                data.Msg = "查询数据库连接字段失败";
             }
-            return "查询数据库连接字段失败";
+            return data;
         }
 
         /// <summary>
@@ -49,17 +55,21 @@ namespace GXVCU.Api.Controllers
         /// <param name="sql"></param>
         /// <returns></returns>
         [HttpPost("CommandSQLString")]
-        public object CommandSQLString(string sql)
+        public MessageModel<int> CommandSQLString(string sql)
         {
+            var data = new MessageModel<int>();
             try
             {
-                return _sqlSugarClient.Ado.GetDataTable(sql).Columns.Count;
+                data.Response = _sqlSugarClient.Ado.GetDataTable(sql).Columns.Count;
+                data.Success = true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
+                data.Success = false;
+                data.Msg = ex.Message;
             }
-            return null;
+            return data;
         }
 
         /// <summary>
@@ -67,8 +77,9 @@ namespace GXVCU.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("CreateDataBase")]
-        public void CreateDataBase()
+        public MessageModel<string> CreateDataBase()
         {
+            var data =new MessageModel<string>();
             try
             {
                 _sqlSugarClient.DbMaintenance.CreateDatabase();
@@ -89,11 +100,16 @@ namespace GXVCU.Api.Controllers
                         _logger.LogInformation("创建表：" + t.Name);
                     }
                 });
+                data.Success = true;
+                data.Msg = "创建数据库完成";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex,"创建数据库失败");
+                data.Success = false;
+                data.Msg = ex.Message;
             }
+            return data;
         }
 
         /// <summary>
@@ -101,18 +117,37 @@ namespace GXVCU.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetTableClass")]
-        public void GetTableClass()
+        public MessageModel<string> GetTableClass([FromBody] TableEntity tableEntity)
         {
-            foreach (var item in _sqlSugarClient.DbMaintenance.GetTableInfoList())
+            var data = new MessageModel<string>();
+            try
             {
-                string entityName = item.Name;
-                _sqlSugarClient.MappingTables.Add(entityName, item.Name);
-                foreach (var col in _sqlSugarClient.DbMaintenance.GetColumnInfosByTableName(item.Name))
+                if (string.IsNullOrEmpty(tableEntity.DirectoryPath) || tableEntity.DirectoryPath == "string")
+                    tableEntity.DirectoryPath = "D:\\my-files";
+                if (string.IsNullOrEmpty(tableEntity.NameSpace) || tableEntity.NameSpace == "string")
+                    tableEntity.NameSpace = "GXVCU.Model.Models";
+                foreach (var item in _sqlSugarClient.DbMaintenance.GetTableInfoList())
                 {
-                    _sqlSugarClient.MappingColumns.Add(col.DbColumnName, col.DbColumnName, entityName);
+                    string entityName = item.Name;
+                    _sqlSugarClient.MappingTables.Add(entityName, item.Name);
+                    foreach (var col in _sqlSugarClient.DbMaintenance.GetColumnInfosByTableName(item.Name))
+                    {
+                        _sqlSugarClient.MappingColumns.Add(col.DbColumnName, col.DbColumnName, entityName);
+                    }
                 }
+                _sqlSugarClient.DbFirst.IsCreateAttribute().CreateClassFile(tableEntity.DirectoryPath, tableEntity.NameSpace);
+
+                data.Success = true;
+                data.Msg = "数据库表实体生成完成";
+                data.Response = tableEntity.DirectoryPath;
             }
-            _sqlSugarClient.DbFirst.IsCreateAttribute().CreateClassFile("D:\\Demo", "Models");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "数据库表实体生成异常");
+                data.Success = false;
+                data.Msg = ex.Message;
+            }
+            return data;
         }
 
     }
