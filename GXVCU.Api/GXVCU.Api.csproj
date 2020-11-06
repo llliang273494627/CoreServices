@@ -8,11 +8,14 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="3.1.3" />
 		<PackageReference Include="sqlSugarCore" Version="5.0.0.19" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\GXVCU.Common\GXVCU.Common.csproj" />
 	  <ProjectReference Include="..\GXVCU.Model\GXVCU.Model.csproj" />
+	  <ProjectReference Include="..\GXVCU.Services\GXVCU.Services.csproj" />
+	  <ProjectReference Include="..\GXVCU.Tasks\GXVCU.Tasks.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SqlSugar;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace GXVCU.Api
 {
@@ -29,6 +30,10 @@ namespace GXVCU.Api
             // 添加Swagger服务
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo());
+                c.OrderActionsBy(o => o.RelativePath);
+                // 开启加权小锁
+                c.OperationFilter<AddResponseHeadersFilter>();
+                c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             });
             // 添加配置参数
             services.AddScoped(o => { return new Appsettings(Configuration); });
@@ -78,6 +83,10 @@ namespace GXVCU.Api
                 });
                 return db;
             });
+            // 添加自定义表服务
+            services.AddTableService();
+            // 添加任务服务
+            services.AddJobSetup();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

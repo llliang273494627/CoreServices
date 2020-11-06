@@ -1,4 +1,5 @@
 ﻿using GXVCU.Model.Models;
+using Microsoft.Extensions.Logging;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,12 @@ namespace GXVCU.Services
 {
     public class TasksQzServices
     {
-        private readonly ISqlSugarClient _sqlSugarClient;
+        private readonly ILogger<TasksQzServices> _logger;
+        private readonly SqlSugarClient _sqlSugarClient;
 
-        public TasksQzServices(ISqlSugarClient sqlSugarClient)
+        public TasksQzServices(ILogger<TasksQzServices> logger , SqlSugarClient sqlSugarClient)
         {
+            _logger = logger;
             _sqlSugarClient = sqlSugarClient;
         }
 
@@ -38,6 +41,11 @@ namespace GXVCU.Services
         public async Task<TasksQz> SelectJob(int jobId)
         {
             return  await _sqlSugarClient.Queryable<TasksQz>().Where(c => c.Id == jobId).FirstAsync();
+        }
+
+        public async Task<int> DelJob(int jobId)
+        {
+            return await _sqlSugarClient.Deleteable<TasksQz>().Where(t => t.Id == jobId).ExecuteCommandAsync();
         }
     }
 }
