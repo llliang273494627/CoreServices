@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace GXVCU.Common.DB
 {
@@ -10,32 +9,21 @@ namespace GXVCU.Common.DB
     {
         public static string NodeName = "MainDB";
 
+        public bool SqlAOPEnabled { get; set; }
+
         public string CurrentDbConnId { get; set; }
-
-        public bool MutiDBEnabled { get; set; }
-
-        public bool CQRSEnabled { get; set; }
 
         public List<MutiDBOperate> DBS { get; set; }
 
-        public static MutiDBOperate SpecialDbString(MutiDBOperate mutiDBOperate)
+        public MutiDBOperate CurrentDb
         {
-            switch (mutiDBOperate?.DbType)
+            get
             {
-                case DataBaseType.Sqlite:
-                    mutiDBOperate.Connection = $"DataSource=" + Path.Combine(Environment.CurrentDirectory, mutiDBOperate.Connection);
-                    break;
+                if (DBS == null) return null;
+                return DBS.First(c => c.ConnId == CurrentDbConnId);
             }
-            return mutiDBOperate;
         }
 
-        public MutiDBOperate CurrentDb()
-        {
-            if (DBS == null)
-                return null;
-            var mutiDBOperate = DBS.First(c => c.ConnId == CurrentDbConnId);
-            return SpecialDbString(mutiDBOperate);
-        }
     }
 
     public class MutiDBOperate

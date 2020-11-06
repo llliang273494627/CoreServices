@@ -7,6 +7,7 @@ using Quartz.Impl.Triggers;
 using Quartz.Spi;
 using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -136,7 +137,7 @@ namespace GXVCU.Tasks
                     DateTimeOffset endRunTime = DateBuilder.NextGivenSecondDate(tasksQz.EndTime, 1);//设置暂停时间
 
                     Assembly assembly = Assembly.Load(new AssemblyName(tasksQz.AssemblyName));
-                    Type jobType = assembly.GetType(tasksQz.ClassName);
+                    Type jobType = assembly.GetTypes().Where(t=>t.Name==tasksQz.ClassName).First();
 
                     //判断任务调度是否开启
                     if (!_scheduler.Result.IsStarted)

@@ -10,6 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\GXVCU.Common\GXVCU.Common.csproj" />
 	  <ProjectReference Include="..\GXVCU.Model\GXVCU.Model.csproj" />
 	</ItemGroup>
 

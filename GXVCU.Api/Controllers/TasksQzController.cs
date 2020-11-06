@@ -32,7 +32,7 @@ namespace GXVCU.Api.Controllers
         /// 查找所以的任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("GetJobs")]
+        [HttpPost("GetJobsEntity")]
         public async Task<MessageModel<List<TasksQz>>> GetJobsEntity()
         {
             var data = new MessageModel<List<TasksQz>>();
@@ -54,7 +54,7 @@ namespace GXVCU.Api.Controllers
         /// 查找任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("SelectJob")]
+        [HttpPost("SelectJobEntity")]
         public async Task<MessageModel<TasksQz>> SelectJobEntity(int jobId)
         {
             var data = new MessageModel<TasksQz>();
@@ -77,7 +77,7 @@ namespace GXVCU.Api.Controllers
         /// </summary>
         /// <param name="tasksQz"></param>
         /// <returns></returns>
-        [HttpPost("AddJob")]
+        [HttpPost("AddJobEntity")]
         public async Task<MessageModel<int>> AddJobEntity([FromBody] TasksQz tasksQz)
         {
             var data = new MessageModel<int>();
@@ -99,7 +99,7 @@ namespace GXVCU.Api.Controllers
         /// 修改任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("UpdataJob")]
+        [HttpPost("UpdataJobEntity")]
         public async Task<MessageModel<bool>> UpdataJobEntity([FromBody]TasksQz tasksQz)
         {
             var data = new MessageModel<bool>();
@@ -121,7 +121,7 @@ namespace GXVCU.Api.Controllers
         /// 删除任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("DelJob")]
+        [HttpPost("DelJobEntity")]
         public async Task<MessageModel<int>> DelJobEntity(int jobId)
         {
             var data = new MessageModel<int>();
@@ -142,25 +142,31 @@ namespace GXVCU.Api.Controllers
         /// <summary>
         /// 添加一个任务
         /// </summary>
-        //[HttpPost("AddJob")]
-        //public async Task<MessageModel<string>> AddJob([FromBody] TasksQz tasksQz)
-        //{
-        //   // var v =new MessageModel<string>();
-
-        //   //var vv= await _scheduler.StopScheduleJobAsync(tasksQz);
-        //   // return v;
-        //}
+        [HttpPost("AddJob")]
+        public async Task<MessageModel<string>> AddJob(int jobId)
+        {
+            var model =await _tasksQz.SelectJob(jobId);
+            return await _scheduler.AddScheduleJobAsync(model);
+        }
 
         /// <summary>
         /// 暂停一个任务
         /// </summary>
-        //[HttpPost("AddJob")]
-        //public async Task<MessageModel<string>> StopJob([FromBody] TasksQz tasksQz)
-        //{
-        //    var v= await _scheduler.StopScheduleJobAsync(tasksQz);
-        //    return v;
-        //}
+        [HttpPost("AwaitJob")]
+        public async Task<MessageModel<string>> AwaitJob([FromBody] TasksQz tasksQz)
+        {
+            return await _scheduler.StopScheduleJobAsync(tasksQz);
+        }
 
+        /// <summary>
+        /// 恢复一个任务
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ResumeJob")]
+        public async Task<MessageModel<string>> ResumeJob([FromBody] TasksQz tasksQz)
+        {
+            return await _scheduler.ResumeJob(tasksQz);
+        }
 
 
     }
