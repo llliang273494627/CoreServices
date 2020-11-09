@@ -32,7 +32,8 @@ namespace GXVCU.Api
 
             // 添加Swagger服务
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo());
+                c.SwaggerDoc("V1", new OpenApiInfo());
+                c.SwaggerDoc("V2", new OpenApiInfo());
                 c.OrderActionsBy(o => o.RelativePath);
                 // 开启加权小锁
                 c.OperationFilter<AddResponseHeadersFilter>();
@@ -125,7 +126,8 @@ namespace GXVCU.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("swagger/v1/swagger.json", "My V1 Api");
+                c.SwaggerEndpoint("swagger/V1/swagger.json", "My V1 Api");
+                c.SwaggerEndpoint("swagger/V2/swagger.json", "My V2 Api");
                 c.RoutePrefix = "";
             });
             logger.LogInformation("添加Swagger");
