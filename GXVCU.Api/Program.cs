@@ -28,6 +28,9 @@ namespace GXVCU.Api
                         // 过滤类别
                         c.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
                         c.AddFilter("Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware", LogLevel.None);
+                        c.AddFilter("Quartz.Impl.StdSchedulerFactory", LogLevel.None);
+                        c.AddFilter("Quartz.Core.SchedulerSignalerImpl", LogLevel.None);
+                        c.AddFilter("Quartz.Core.QuartzScheduler", LogLevel.None);
                         // 添加控制台输出
                         c.AddConsole();
                         c.AddLog4Net();
