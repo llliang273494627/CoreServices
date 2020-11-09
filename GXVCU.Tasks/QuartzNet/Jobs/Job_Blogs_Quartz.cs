@@ -21,7 +21,7 @@ namespace GXVCU.Tasks.QuartzNet.Jobs
         {
             return Task.Run(() =>
             {
-                Console.WriteLine("执行MyJob");
+                Console.WriteLine(DateTime.Now + " 执行MyJob");
                 _logger.LogInformation("执行MyJob");
             });
         }
