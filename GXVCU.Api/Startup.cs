@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using GXVCU.Api.Comm;
+using GXVCU.Common.DB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -90,7 +91,7 @@ namespace GXVCU.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> logger,SqlSugarClient sqlSugarClient)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, DBSeed dBSeed)
         {
             if (env.IsDevelopment())
             {
@@ -110,11 +111,14 @@ namespace GXVCU.Api
 
             // 添加Swagger
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("swagger/v1/swagger.json", "My V1 Api");
                 c.RoutePrefix = "";
             });
             logger.LogInformation("添加Swagger");
+            // 添加种子数据
+            app.UseSeedDataMildd(dBSeed);
 
         }
     }

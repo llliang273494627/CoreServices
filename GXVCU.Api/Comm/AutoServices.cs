@@ -1,4 +1,5 @@
-﻿using GXVCU.Services;
+﻿using GXVCU.Common.DB;
+using GXVCU.Services;
 using GXVCU.Tasks;
 using GXVCU.Tasks.QuartzNet.Jobs;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ namespace GXVCU.Api.Comm
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             services.AddTransient<TasksQzServices>();
+            services.AddScoped<DBSeed>();
         }
 
         /// <summary>
