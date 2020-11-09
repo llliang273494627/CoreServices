@@ -21,8 +21,9 @@ namespace GXVCU.Api.Comm
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient<TasksQzServices>();
             services.AddScoped<DBSeed>();
+            services.AddTransient<TasksQzServices>();
+            
         }
 
         /// <summary>

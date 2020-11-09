@@ -16,6 +16,8 @@ namespace GXVCU.Api
 {
     public class Startup
     {
+        private static ILogger<Startup> _logger;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -58,6 +60,15 @@ namespace GXVCU.Api
                                 Parallel.For(0, 1, e =>
                                 {
                                     Console.WriteLine("¡¾SQLÓï¾ä¡¿£º" + sql);
+                                    if (_logger != null)
+                                    {
+                                        string key = "¡¾SQL²ÎÊý¡¿£º";
+                                        foreach (var param in p)
+                                        {
+                                            key += $"{param.ParameterName}:{param.Value}\n";
+                                        }
+                                        _logger.LogInformation(key + "¡¾SQLÓï¾ä¡¿£º" + sql);
+                                    }
                                 });
                             }
                         }
@@ -109,6 +120,7 @@ namespace GXVCU.Api
                 endpoints.MapControllers();
             });
 
+            _logger = logger;
             // Ìí¼ÓSwagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>

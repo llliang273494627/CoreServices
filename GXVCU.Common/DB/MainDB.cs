@@ -9,6 +9,9 @@ namespace GXVCU.Common.DB
     {
         public static string NodeName = "MainDB";
 
+        /// <summary>
+        /// 是否写入日志
+        /// </summary>
         public bool SqlAOPEnabled { get; set; }
 
         public string CurrentDbConnId { get; set; }
