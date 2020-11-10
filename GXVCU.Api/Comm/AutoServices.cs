@@ -1,5 +1,5 @@
-﻿using GXVCU.Common;
-using GXVCU.Common.DB;
+﻿using GXVCU.Common.DB;
+using GXVCU.Common.Helper;
 using GXVCU.Services;
 using GXVCU.Tasks;
 using GXVCU.Tasks.QuartzNet.Jobs;
@@ -51,8 +51,6 @@ namespace GXVCU.Api.Comm
 
             // 添加配置参数
             services.AddScoped(o => { return new Appsettings(configuration); });
-            // 格式转换
-            services.AddTransient<FormatConversion>();
         }
     }
 }
