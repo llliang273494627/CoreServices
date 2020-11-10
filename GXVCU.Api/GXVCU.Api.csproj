@@ -18,4 +18,10 @@
 	  <ProjectReference Include="..\GXVCU.Tasks\GXVCU.Tasks.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="wwwroot\GXVCU.Data.json\TasksQz.tsv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
 </Project>

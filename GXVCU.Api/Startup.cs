@@ -39,8 +39,8 @@ namespace GXVCU.Api
                 c.OperationFilter<AddResponseHeadersFilter>();
                 c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             });
-            // 添加配置参数
-            services.AddScoped(o => { return new Appsettings(Configuration); });
+            // 通用类服务
+            services.AddPublicClassService(Configuration);
             // 添加数据库服务
             services.AddScoped(o => {
                 var maindb = new Appsettings(Configuration).MainDB;
