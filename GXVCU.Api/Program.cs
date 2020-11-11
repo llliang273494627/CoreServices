@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GXVCU.Api.Comm;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +22,9 @@ namespace GXVCU.Api
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    var setting = new Appsettings(Directory.GetCurrentDirectory());
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls(setting.UseUrls);
 
                     // Ìí¼Ólog4netÈÕÖ¾
                     webBuilder.ConfigureLogging(c =>
