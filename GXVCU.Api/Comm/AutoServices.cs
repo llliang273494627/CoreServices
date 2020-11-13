@@ -20,7 +20,11 @@ namespace GXVCU.Api.Comm
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
+            // 不同http清求，实例不同，同名谓词不同，也不行。
+            // 例如httpget跟httppost,作用域是一定范围内，
+            // 例如从同一个post请求的create方法，只能统计一次，每次请求都是新的实例
             services.AddScoped<DBSeed>();
+            // 临时服务，每次请求时会创建一个新的服务
             services.AddTransient<TasksQzServices>();
             
         }
@@ -33,11 +37,9 @@ namespace GXVCU.Api.Comm
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            //services.AddHostedService<Job1TimedService>();
-            //services.AddHostedService<Job2TimedService>();
-
+            // 首次创建(单例模式)
             services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddTransient<Job_Blogs_Quartz>();//Job使用瞬时依赖注入
+            services.AddSingleton<Job_Blogs_Quartz>();
             services.AddSingleton<SchedulerCenterServer>();
         }
 

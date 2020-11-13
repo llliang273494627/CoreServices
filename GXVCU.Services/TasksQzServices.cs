@@ -20,7 +20,7 @@ namespace GXVCU.Services
         }
 
         /// <summary>
-        /// 获取所以的任务
+        /// 获取所有的任务
         /// </summary>
         /// <param name="obj"></param>
         public async Task<List<TasksQz>> GetTasks()

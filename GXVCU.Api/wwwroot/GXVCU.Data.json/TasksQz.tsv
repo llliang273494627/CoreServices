@@ -7,7 +7,7 @@
     "assemblyName": "GXVCU.Tasks",
     "className": "Job_Blogs_Quartz",
     "remark": "任务描述",
-    "runTimes": 3,
+    "runTimes": 1,
     "beginTime": "2020-11-09T00:00:00",
     "endTime": "2022-11-15T00:00:00",
     "triggerType": 0,

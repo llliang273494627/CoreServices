@@ -1,6 +1,7 @@
 ﻿using GXVCU.Common;
 using GXVCU.Model.Models;
 using GXVCU.Tasks.QuartzNet.Jobs;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Triggers;
@@ -20,12 +21,15 @@ namespace GXVCU.Tasks
     {
         private Task<IScheduler> _scheduler;
         private readonly IJobFactory _iocjobFactory;
+        private readonly ILogger<SchedulerCenterServer> _logger;
 
-        public SchedulerCenterServer(IJobFactory jobFactory)
+        public SchedulerCenterServer(IJobFactory jobFactory,ILogger<SchedulerCenterServer> logger)
         {
             _iocjobFactory = jobFactory;
             _scheduler = GetSchedulerAsync();
+            _logger = logger;
         }
+
         private Task<IScheduler> GetSchedulerAsync()
         {
             if (_scheduler != null)
@@ -59,19 +63,19 @@ namespace GXVCU.Tasks
                     await Console.Out.WriteLineAsync("任务调度开启！");
                     result.Success = true;
                     result.Msg = $"任务调度开启成功";
-                    return result;
                 }
                 else
                 {
                     result.Success = false;
                     result.Msg = $"任务调度已经开启";
-                    return result;
                 }
+                _logger.LogInformation(result.Msg);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, "任务调度开启异常");
             }
+            return result;
         }
 
         /// <summary>
@@ -90,19 +94,19 @@ namespace GXVCU.Tasks
                     await Console.Out.WriteLineAsync("任务调度停止！");
                     result.Success = true;
                     result.Msg = $"任务调度停止成功";
-                    return result;
                 }
                 else
                 {
                     result.Success = false;
                     result.Msg = $"任务调度已经停止";
-                    return result;
                 }
+                _logger.LogInformation(result.Msg);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, "任务调度停止异常");
             }
+            return result;
         }
 
         /// <summary>
@@ -168,6 +172,7 @@ namespace GXVCU.Tasks
                 {
                     result.Success = false;
                     result.Msg = $"任务计划异常:【{ex.Message}】";
+                    _logger.LogError(ex, result.Msg);
                     return result;
                 }
             }
@@ -175,6 +180,7 @@ namespace GXVCU.Tasks
             {
                 result.Success = false;
                 result.Msg = $"任务计划不存在:【{tasksQz?.Name}】";
+                _logger.LogInformation(result.Msg);
                 return result;
             }
         }
@@ -193,6 +199,7 @@ namespace GXVCU.Tasks
                 {
                     result.Success = false;
                     result.Msg = $"未找到要暂停的任务:【{sysSchedule.Name}】";
+                    _logger.LogInformation(result.Msg);
                     return result;
                 }
                 else
@@ -200,11 +207,13 @@ namespace GXVCU.Tasks
                     await this._scheduler.Result.PauseJob(jobKey);
                     result.Success = true;
                     result.Msg = $"暂停任务:【{sysSchedule.Name}】成功";
+                    _logger.LogInformation(result.Msg);
                     return result;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "暂停任务异常");
                 throw;
             }
         }
@@ -224,6 +233,7 @@ namespace GXVCU.Tasks
                 {
                     result.Success = false;
                     result.Msg = $"未找到要重新的任务:【{tasksQz.Name}】,请先选择添加计划！";
+                    _logger.LogInformation(result.Msg);
                     return result;
                 }
 
@@ -245,10 +255,12 @@ namespace GXVCU.Tasks
 
                 result.Success = true;
                 result.Msg = $"恢复计划任务:【{tasksQz.Name}】成功";
+                _logger.LogInformation(result.Msg);
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "恢复计划任务异常");
                 throw;
             }
         }
