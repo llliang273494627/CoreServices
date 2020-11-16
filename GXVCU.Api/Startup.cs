@@ -33,7 +33,14 @@ namespace GXVCU.Api
 
             // 添加Swagger服务
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("V1", new OpenApiInfo());
+                c.SwaggerDoc("V1", new OpenApiInfo
+                {
+                    Version = "V1",
+                    Description = "Dbs：数据库接口，TasksQz：定时任务接口",
+                    Title = "第一版本接口文档",
+                    //License = new OpenApiLicense { Name = "V1" + " 官方文档", Url = new Uri("http://apk.neters.club/.doc/") },
+                    Contact = new OpenApiContact { Name = "V1 前端", Url = new Uri("http://192.168.0.100:8088/") },
+                });
                 c.SwaggerDoc("V2", new OpenApiInfo());
                 c.OrderActionsBy(o => o.RelativePath);
                 // 开启加权小锁
@@ -128,7 +135,7 @@ namespace GXVCU.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("swagger/V1/swagger.json", "My V1 Api");
+                c.SwaggerEndpoint("swagger/V1/swagger.json", "基础接口");
                 c.SwaggerEndpoint("swagger/V2/swagger.json", "My V2 Api");
                 c.RoutePrefix = "";
             });

@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GXVCU.Api", "GXVCU.Api\GXVC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GXVCU.Model", "GXVCU.Model\GXVCU.Model.csproj", "{063F8770-C133-4ED2-9332-72FC3EDC12CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GXVCU.Mvc", "GXVCU.Mvc\GXVCU.Mvc.csproj", "{81912ACF-9074-454D-B5EC-05100E236CD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GXVCU.Mvc", "GXVCU.Mvc\GXVCU.Mvc.csproj", "{81912ACF-9074-454D-B5EC-05100E236CD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameWork.Frms", "FrameWork.Frms\FrameWork.Frms.csproj", "{20320A39-DD7D-4C3F-BD63-16F18AE817EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{81912ACF-9074-454D-B5EC-05100E236CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81912ACF-9074-454D-B5EC-05100E236CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81912ACF-9074-454D-B5EC-05100E236CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20320A39-DD7D-4C3F-BD63-16F18AE817EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20320A39-DD7D-4C3F-BD63-16F18AE817EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20320A39-DD7D-4C3F-BD63-16F18AE817EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20320A39-DD7D-4C3F-BD63-16F18AE817EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

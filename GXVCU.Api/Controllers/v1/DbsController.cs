@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using GXVCU.Api.Comm;
 using GXVCU.Common;
 using GXVCU.Common.DB;
 using GXVCU.Common.FromBodys;
@@ -34,7 +35,8 @@ namespace GXVCU.Api.Controllers
         /// 查看数据库连接字符串
         /// </summary>
         /// <returns></returns>
-        [HttpPost("GetConnectionString")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "GetConnectionString")]
         public MessageModel<string> GetConnectionString()
         {
             var data = new MessageModel<string>();
@@ -57,7 +59,8 @@ namespace GXVCU.Api.Controllers
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        [HttpPost("CommandSQLString")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "CommandSQLString")]
         public MessageModel<int> CommandSQLString(string sql)
         {
             var data = new MessageModel<int>();
@@ -79,7 +82,8 @@ namespace GXVCU.Api.Controllers
         /// 创建种子数据
         /// </summary>
         /// <returns></returns>
-        [HttpPost("CreateDataBase")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "CreateDataBase")]
         public MessageModel<string> CreateDataBase()
         {
             return _dBSeed.CreateDataBase();
@@ -89,7 +93,8 @@ namespace GXVCU.Api.Controllers
         /// 获取数据库表实体
         /// </summary>
         /// <returns></returns>
-        [HttpPost("GetTableClass")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "GetTableClass")]
         public MessageModel<string> GetTableClass([FromBody] TableEntity tableEntity)
         {
             return _dBSeed.GetTableClass(tableEntity);

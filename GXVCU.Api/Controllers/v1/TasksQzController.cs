@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GXVCU.Api.Comm;
 using GXVCU.Common;
 using GXVCU.Model.Models;
 using GXVCU.Services;
@@ -32,7 +33,8 @@ namespace GXVCU.Api.Controllers
         /// 查找所以的任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("GetJobsEntity")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "GetJobsEntity")]
         public async Task<MessageModel<List<TasksQz>>> GetJobsEntity()
         {
             var data = new MessageModel<List<TasksQz>>();
@@ -54,7 +56,8 @@ namespace GXVCU.Api.Controllers
         /// 查找任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("SelectJobEntity")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "SelectJobEntity")]
         public async Task<MessageModel<TasksQz>> SelectJobEntity(int jobId)
         {
             var data = new MessageModel<TasksQz>();
@@ -77,7 +80,8 @@ namespace GXVCU.Api.Controllers
         /// </summary>
         /// <param name="tasksQz"></param>
         /// <returns></returns>
-        [HttpPost("AddJobEntity")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "AddJobEntity")]
         public async Task<MessageModel<int>> AddJobEntity([FromBody] TasksQz tasksQz)
         {
             var data = new MessageModel<int>();
@@ -99,7 +103,8 @@ namespace GXVCU.Api.Controllers
         /// 修改任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("UpdataJobEntity")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "UpdataJobEntity")]
         public async Task<MessageModel<bool>> UpdataJobEntity([FromBody]TasksQz tasksQz)
         {
             var data = new MessageModel<bool>();
@@ -121,7 +126,8 @@ namespace GXVCU.Api.Controllers
         /// 删除任务记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost("DelJobEntity")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "DelJobEntity")]
         public async Task<MessageModel<int>> DelJobEntity(int jobId)
         {
             var data = new MessageModel<int>();
@@ -142,7 +148,8 @@ namespace GXVCU.Api.Controllers
         /// <summary>
         /// 添加一个任务
         /// </summary>
-        [HttpPost("AddJob")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "AddJob")]
         public async Task<MessageModel<string>> AddJob(int jobId)
         {
             var model =await _tasksQz.SelectJob(jobId);
@@ -152,7 +159,8 @@ namespace GXVCU.Api.Controllers
         /// <summary>
         /// 暂停一个任务
         /// </summary>
-        [HttpPost("AwaitJob")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "AwaitJob")]
         public async Task<MessageModel<string>> AwaitJob([FromBody] TasksQz tasksQz)
         {
             return await _scheduler.StopScheduleJobAsync(tasksQz);
@@ -162,7 +170,8 @@ namespace GXVCU.Api.Controllers
         /// 恢复一个任务
         /// </summary>
         /// <returns></returns>
-        [HttpPost("ResumeJob")]
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "ResumeJob")]
         public async Task<MessageModel<string>> ResumeJob([FromBody] TasksQz tasksQz)
         {
             return await _scheduler.ResumeJob(tasksQz);
