@@ -11,6 +11,23 @@ namespace GXVCU.Api.Comm
     public static class AutoApps
     {
         /// <summary>
+        /// 添加Swagger
+        /// </summary>
+        /// <param name="app"></param>
+        public static void UseSwaggerMildd(this IApplicationBuilder app)
+        {
+            if (app == null) throw new ArgumentNullException(nameof(app));
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("swagger/V1/swagger.json", "基础接口");
+                c.SwaggerEndpoint("swagger/V2/swagger.json", "My V2 Api");
+                c.RoutePrefix = "";
+            });
+        }
+
+        /// <summary>
         /// 添加种子数据
         /// </summary>
         /// <param name="app"></param>
@@ -34,6 +51,7 @@ namespace GXVCU.Api.Comm
             if (app == null) throw new ArgumentNullException(nameof(app));
 
             var tasksQzs = dBSeed.GetTable<TasksQz>().Response?.Where(t => t.IsStart).ToList();
+            Console.WriteLine("启动任务数量：" + tasksQzs.Count);
             foreach (var item in tasksQzs)
             {
                 var res = await schedulerCenter.AddScheduleJobAsync(item);

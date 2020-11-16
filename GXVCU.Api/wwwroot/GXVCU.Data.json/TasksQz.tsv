@@ -12,7 +12,7 @@
     "endTime": "2022-11-15T00:00:00",
     "triggerType": 0,
     "intervalSecond": 1,
-    "isStart": true,
+    "isStart": false,
     "jobParams": "1",
     "isDeleted": true,
     "createTime": "2020-11-09T00:00:00"

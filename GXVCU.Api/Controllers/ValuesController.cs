@@ -1,5 +1,9 @@
 ﻿using GXVCU.Common;
+using GXVCU.Model.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace GXVCU.Api.Controllers
 {
@@ -7,6 +11,13 @@ namespace GXVCU.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly ILogger<ValuesController> _logger;
+
+        public ValuesController(ILogger<ValuesController> logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// 健康检查接口
         /// </summary>
@@ -21,5 +32,8 @@ namespace GXVCU.Api.Controllers
                 Response= "HealthCheck",
             };
         }
+
+       
+
     }
 }
