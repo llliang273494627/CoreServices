@@ -23,9 +23,10 @@ namespace GXVCU.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    //var setting = new Appsettings(Directory.GetCurrentDirectory());
-                    //webBuilder.UseUrls(setting.UseUrls);
-                    //webBuilder.UseKestrel();
+
+                    var setting = new Appsettings(Directory.GetCurrentDirectory());
+                    if (string.IsNullOrEmpty(setting.UseUrls) == false)
+                        webBuilder.UseUrls(setting.UseUrls);
 
                     // Ìí¼Ólog4netÈÕÖ¾
                     webBuilder.ConfigureLogging(c =>
