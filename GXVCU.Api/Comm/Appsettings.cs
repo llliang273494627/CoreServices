@@ -35,7 +35,12 @@ namespace GXVCU.Api.Comm
                .Build();
         }
 
-        public string UseUrls { get { return _configuration.GetSection("UseUrls").Get<string>(); } }
+        public string UseUrls { get { return _configuration.GetSection("UseUrls:Urls").Get<string>(); } }
+
+        /// <summary>
+        /// 是否是应用程序
+        /// </summary>
+        public bool IsExe { get { return _configuration.GetSection("UseUrls:IsExe").Get<bool>(); } }
 
         public MainDB MainDB { get { return _configuration.GetSection(MainDB.NodeName).Get<MainDB>(); } }
     }

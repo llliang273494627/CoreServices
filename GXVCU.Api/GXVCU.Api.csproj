@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>8ab66a9e-fcfe-4604-a668-306088c33efa</UserSecretsId>
   </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="3.1.3" />
 		<PackageReference Include="sqlSugarCore" Version="5.0.0.19" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.0.1" />
 	</ItemGroup>
 
