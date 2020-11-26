@@ -97,9 +97,10 @@ namespace GXVCU.Common.DB
                             if (_sqlSugarClient.Queryable<TasksQz>().Any() == false)
                             {
                                 var tasksQzs = Helper.FormatHelper.JsonToObj<List<TasksQz>>(jsonStr);
+                                tasksQzs.ToList().ForEach((t) => { t.CreateTime = DateTime.Now; });
                                 _sqlSugarClient.Insertable(tasksQzs).ExecuteCommand();
-                                _logger.LogInformation("添加 TasksQz 表初始数据");
-                                Console.WriteLine("添加 TasksQz 表初始数据");
+                                _logger.LogInformation("添加 TasksQzCron 表初始数据");
+                                Console.WriteLine("添加 TasksQzCron 表初始数据");
                             }
                             break;
                     }

@@ -153,15 +153,7 @@ namespace GXVCU.Tasks
                     IJobDetail job = new JobDetailImpl(tasksQz.Id.ToString(), tasksQz.JobGroup, jobType);
                     job.JobDataMap.Add("JobParam", tasksQz.JobParams);
 
-                    ITrigger trigger;
-                    if (tasksQz.Cron != null && CronExpression.IsValidExpression(tasksQz.Cron) && tasksQz.TriggerType > 0)
-                    {
-                        trigger = CreateCronTrigger(tasksQz);
-                    }
-                    else
-                    {
-                        trigger = CreateSimpleTrigger(tasksQz);
-                    }
+                    ITrigger trigger = CreateCronTrigger(tasksQz);
                     // 告诉Quartz使用我们的触发器来安排作业
                     await _scheduler.Result.ScheduleJob(job, trigger);
                     result.Success = true;
@@ -237,21 +229,10 @@ namespace GXVCU.Tasks
                     return result;
                 }
 
-                //await this._scheduler.Result.ResumeJob(jobKey);
-
-                ITrigger trigger;
-                if (tasksQz.Cron != null && CronExpression.IsValidExpression(tasksQz.Cron) && tasksQz.TriggerType > 0)
-                {
-                    trigger = CreateCronTrigger(tasksQz);
-                }
-                else
-                {
-                    trigger = CreateSimpleTrigger(tasksQz);
-                }
+                ITrigger trigger = CreateCronTrigger(tasksQz);
 
                 TriggerKey triggerKey = new TriggerKey(tasksQz.Id.ToString(), tasksQz.JobGroup);
                 await _scheduler.Result.RescheduleJob(triggerKey, trigger);
-
 
                 result.Success = true;
                 result.Msg = $"恢复计划任务:【{tasksQz.Name}】成功";
@@ -265,42 +246,6 @@ namespace GXVCU.Tasks
             }
         }
 
-        #region 创建触发器帮助方法
-
-        /// <summary>
-        /// 创建SimpleTrigger触发器（简单触发器）
-        /// </summary>
-        /// <param name="sysSchedule"></param>
-        /// <param name="starRunTime"></param>
-        /// <param name="endRunTime"></param>
-        /// <returns></returns>
-        private ITrigger CreateSimpleTrigger(TasksQz sysSchedule)
-        {
-            if (sysSchedule.RunTimes > 0)
-            {
-                ITrigger trigger = TriggerBuilder.Create()
-                .WithIdentity(sysSchedule.Id.ToString(), sysSchedule.JobGroup)
-                .StartAt(sysSchedule.BeginTime.Value)
-                .EndAt(sysSchedule.EndTime.Value)
-                .WithSimpleSchedule(x =>
-                x.WithIntervalInSeconds(sysSchedule.IntervalSecond)
-                .WithRepeatCount(sysSchedule.RunTimes)).ForJob(sysSchedule.Id.ToString(), sysSchedule.JobGroup).Build();
-                return trigger;
-            }
-            else
-            {
-                ITrigger trigger = TriggerBuilder.Create()
-                .WithIdentity(sysSchedule.Id.ToString(), sysSchedule.JobGroup)
-                .StartAt(sysSchedule.BeginTime.Value)
-                .EndAt(sysSchedule.EndTime.Value)
-                .WithSimpleSchedule(x =>
-                x.WithIntervalInSeconds(sysSchedule.IntervalSecond)
-                .RepeatForever()).ForJob(sysSchedule.Id.ToString(), sysSchedule.JobGroup).Build();
-                return trigger;
-            }
-            // 触发作业立即运行，然后每10秒重复一次，无限循环
-
-        }
         /// <summary>
         /// 创建类型Cron的触发器
         /// </summary>
@@ -308,16 +253,27 @@ namespace GXVCU.Tasks
         /// <returns></returns>
         private ITrigger CreateCronTrigger(TasksQz sysSchedule)
         {
+            //CronExpression.IsValidExpression(sysSchedule.Cron)
+            var trigger = TriggerBuilder.Create();
+            trigger.WithIdentity(sysSchedule.Id.ToString(), sysSchedule.JobGroup);
+            // 开始时间
+            trigger.StartAt(sysSchedule.BeginTime.Value);
+            // 结束数据
+            trigger.EndAt(sysSchedule.EndTime.Value);
+            // 指定cron表达式
+            if (CronExpression.IsValidExpression(sysSchedule.Cron))
+                trigger.WithCronSchedule(sysSchedule.Cron);
+            else
+            {
+                trigger.WithSimpleSchedule(x =>
+                    x.WithIntervalInSeconds(sysSchedule.IntervalSecond)
+                    .RepeatForever()).ForJob(sysSchedule.Id.ToString(), sysSchedule.JobGroup);
+            }
+            // 作业名称
+            trigger.ForJob(sysSchedule.Id.ToString(), sysSchedule.JobGroup);
             // 作业触发器
-            return TriggerBuilder.Create()
-                   .WithIdentity(sysSchedule.Id.ToString(), sysSchedule.JobGroup)
-                   .StartAt(sysSchedule.BeginTime.Value)//开始时间
-                   .EndAt(sysSchedule.EndTime.Value)//结束数据
-                   .WithCronSchedule(sysSchedule.Cron)//指定cron表达式
-                   .ForJob(sysSchedule.Id.ToString(), sysSchedule.JobGroup)//作业名称
-                   .Build();
+            return trigger.Build();
         }
-        #endregion
-
+       
     }
 }

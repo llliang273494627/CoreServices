@@ -1,20 +1,17 @@
 ﻿[
   {
     "id": 1,
-    "name": "博客管理",
-    "jobGroup": "博客测试组",
-    "cron": "0 */1 * * * ?",
+    "name": "JobOne",
+    "jobGroup": "JobGroup",
+    "cron": "10 * * * * ?",
+    "IntervalSecond": 10,
     "assemblyName": "GXVCU.Tasks",
     "className": "Job_Blogs_Quartz",
     "remark": "任务描述",
-    "runTimes": 1,
-    "beginTime": "2020-11-09T00:00:00",
-    "endTime": "2022-11-15T00:00:00",
-    "triggerType": 0,
-    "intervalSecond": 1,
-    "isStart": false,
-    "jobParams": "1",
-    "isDeleted": true,
-    "createTime": "2020-11-09T00:00:00"
+    "createTime": "2020-11-09",
+    "beginTime": "2020-11-09",
+    "endTime": "2099-11-15",
+    "isStart": true,
+    "jobParams": "1"
   }
 ]
