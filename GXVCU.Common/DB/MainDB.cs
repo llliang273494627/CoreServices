@@ -7,8 +7,6 @@ namespace GXVCU.Common.DB
 {
     public class MainDB
     {
-        public static string NodeName = "MainDB";
-
         /// <summary>
         /// 是否写入日志
         /// </summary>

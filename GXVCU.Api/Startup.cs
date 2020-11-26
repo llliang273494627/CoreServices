@@ -105,6 +105,9 @@ namespace GXVCU.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            // 添加全局监控(必须放在外层，否则不能返回)
+            app.UseMiddleware<AutoUseMiddleware>();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -123,6 +126,7 @@ namespace GXVCU.Api
             app.UseSeedDataMildd(dBSeed);
             // 开启QuartzNetJob调度服务
             app.UseQuartzJobMildd(logger, dBSeed, schedulerCenter);
+            
         }
     }
 }

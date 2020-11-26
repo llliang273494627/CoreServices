@@ -1,4 +1,5 @@
 ﻿using GXVCU.Common.DB;
+using GXVCU.Common.SettingEntity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using System;
@@ -37,6 +38,8 @@ namespace GXVCU.Api.Comm
 
         public string UseUrls { get { return _configuration.GetSection("UseUrls").Get<string>(); } }
 
-        public MainDB MainDB { get { return _configuration.GetSection(MainDB.NodeName).Get<MainDB>(); } }
+        public MainDB MainDB { get { return _configuration.GetSection("MainDB").Get<MainDB>(); } }
+
+        public EntityMiddleware Middleware { get { return _configuration.GetSection("Middleware").Get<EntityMiddleware>(); } }
     }
 }
