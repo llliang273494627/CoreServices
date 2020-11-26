@@ -59,7 +59,10 @@ namespace GXVCU.Api.Comm
             var request = context.Request;
             var sr = new StreamReader(request.Body);
             var StrBody = await sr.ReadToEndAsync();
-            var content = $" QueryData：{request .Host}{request .Path}，{request .Method}\r\n BodyData：{StrBody}";
+            var content = 
+                $"QueryData：{request .Host}{request .Path}，{request .Method}\r\n" +
+                $" BodyData：{StrBody}\r\n" +
+                $"QueryData：{request.QueryString}";
             if (!string.IsNullOrEmpty(content))
             {
                 _logger.LogWarning(content);
