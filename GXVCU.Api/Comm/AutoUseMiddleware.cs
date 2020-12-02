@@ -38,7 +38,7 @@ namespace GXVCU.Api.Comm
                             var request = context.Request;
                             var url = $"{ request.Host }{ request.Path}，{ request.Method}";
                             var queryStr = request.QueryString;
-                            var content = $"QueryData：{url}\r\n QueryData：{queryStr}";
+                            var content = $" QueryData：{url}\r\n QueryString：{queryStr}";
                             _logger.LogWarning(content);
                             break;
                         }
