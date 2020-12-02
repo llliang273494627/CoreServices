@@ -35,9 +35,11 @@ namespace GXVCU.Api.Comm
                     {
                         if (context.Request.Path.Value.ToLower().Contains(itme))
                         {
-                            // 存储请求数据
-                            await RequestDataLog(context);
-                            return;
+                            var request = context.Request;
+                            var url = $"{ request.Host }{ request.Path}，{ request.Method}";
+                            var queryStr = request.QueryString;
+                            var content = $"QueryData：{url}\r\n QueryData：{queryStr}";
+                            break;
                         }
                     }
                 }
@@ -49,26 +51,5 @@ namespace GXVCU.Api.Comm
             }
         }
 
-        /// <summary>
-        /// 请求信息写入日志
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        private async Task RequestDataLog(HttpContext context)
-        {
-            var request = context.Request;
-            var sr = new StreamReader(request.Body);
-            var StrBody = await sr.ReadToEndAsync();
-            var content = 
-                $"QueryData：{request .Host}{request .Path}，{request .Method}\r\n" +
-                $" BodyData：{StrBody}\r\n" +
-                $"QueryData：{request.QueryString}";
-            if (!string.IsNullOrEmpty(content))
-            {
-                _logger.LogWarning(content);
-            }
-        }
-
-      
     }
 }
