@@ -31,6 +31,7 @@ namespace GXVCU.Services
         public async Task<int> LogInformation(LogDetails logDetails)
         {
             logDetails.LogLevel = 2;
+            logDetails.LogDate = System.DateTime.Now;
             return await _sqlSugarClient.Insertable(logDetails).ExecuteCommandAsync();
         }
 
@@ -42,6 +43,7 @@ namespace GXVCU.Services
         public async Task<int> LogError(LogDetails logDetails)
         {
             logDetails.LogLevel = 4;
+            logDetails.LogDate = System.DateTime.Now;
             return await _sqlSugarClient.Insertable(logDetails).ExecuteCommandAsync();
         }
     }
