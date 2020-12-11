@@ -29,31 +29,17 @@ namespace GXVCU.Api.Controllers.v2
         /// <summary>
         /// 打印测试
         /// </summary>
+        /// <param name="entityBitmap"></param>
         /// <returns></returns>
         [HttpPost]
         [CustomRoute(ApiVersions.V2, "Print")]
-        public MessageModel<string> Print()
+        public MessageModel<string> Print([FromBody] EntityBitmapLHGQ entityBitmap)
         {
             var data = new MessageModel<string>();
             try
             {
-                var v = new EntityBitmapLHGQ
-                {
-                    PartName = "整车控制器",
-                    Hardware = "Hardware",
-                    Software = "Software",
-                    Company = "联合汽车电子有限公司",
-                    DateTime = "2018/12/21",
-                    VIN = "NO.0001",
-                    Sign = "S1",
-                    Num = "A18",
-                    CodeText = " ",
-                    PartNum = "零件号",
-                    SW = "SW",
-                    HW = "HW",
-                };
                 var print = new HelperPrintDocument();
-                print.Print(v);
+                print.Print(entityBitmap);
                 data.Response = "已经发出打印请求！";
                 data.Success = true;
             }
@@ -67,7 +53,5 @@ namespace GXVCU.Api.Controllers.v2
             return data;
         }
 
-
-        
     }
 }
