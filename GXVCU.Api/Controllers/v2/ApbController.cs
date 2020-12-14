@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using GXVCU.Api.Comm;
 using GXVCU.Common;
 using GXVCU.Common.Helper;
@@ -48,6 +49,31 @@ namespace GXVCU.Api.Controllers.v2
                 _logger.LogError(ex, ex.Message);
                 data.Success = false;
                 data.Response = "打印失败！";
+                data.Msg = ex.Message;
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// 获取二维码
+        /// </summary>
+        /// <param name="qRCode"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [CustomRoute(ApiVersions.V2, "GetQRCode")]
+        public MessageModel<Bitmap> GetQRCode(string qRCode)
+        {
+            var data = new MessageModel<Bitmap>();
+            try
+            {
+                data.Response = HelperBitmap.CreatQRCode(qRCode);
+                data.Success = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                data.Success = false;
+                data.Response = null;
                 data.Msg = ex.Message;
             }
             return data;

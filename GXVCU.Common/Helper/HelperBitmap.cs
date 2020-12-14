@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using ThoughtWorks.QRCode.Codec;
 using ZXing;
 using ZXing.Common;
 
@@ -82,6 +83,29 @@ namespace GXVCU.Common.Helper
             catch (Exception ex)
             {
                 HelperLog.Error("生成条码失败！", ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 生成二维码条码
+        /// </summary>
+        /// <param name="text"></param>
+        public static Bitmap CreatQRCode(string text)
+        {
+            try
+            {
+                QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
+                qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
+                qrCodeEncoder.QRCodeScale = 4;
+                qrCodeEncoder.QRCodeVersion = 8;
+                qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
+                Bitmap image = qrCodeEncoder.Encode(text);
+                return image;
+            }
+            catch (Exception ex)
+            {
+                HelperLog.Error("生成二维码码失败！", ex);
                 return null;
             }
         }
