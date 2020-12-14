@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GXVCU.Common.SettingEntity;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -91,16 +92,16 @@ namespace GXVCU.Common.Helper
         /// 生成二维码条码
         /// </summary>
         /// <param name="text"></param>
-        public static Bitmap CreatQRCode(string text)
+        public static Bitmap CreatQRCode(EntityQRCode entityQR)
         {
             try
             {
                 QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
                 qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
-                qrCodeEncoder.QRCodeScale = 4;
-                qrCodeEncoder.QRCodeVersion = 8;
+                qrCodeEncoder.QRCodeScale = entityQR.Scale;
+                qrCodeEncoder.QRCodeVersion = entityQR.Version;
                 qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
-                Bitmap image = qrCodeEncoder.Encode(text);
+                Bitmap image = qrCodeEncoder.Encode(entityQR.Value);
                 return image;
             }
             catch (Exception ex)

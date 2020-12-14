@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using GXVCU.Api.Comm;
 using GXVCU.Common;
 using GXVCU.Common.Helper;
@@ -56,18 +58,23 @@ namespace GXVCU.Api.Controllers.v2
         }
 
         /// <summary>
-        /// 获取二维码
+        /// 获取二维码Base64Str
         /// </summary>
-        /// <param name="qRCode"></param>
+        /// <param name="entityValue"></param>
         /// <returns></returns>
         [HttpPost]
-        [CustomRoute(ApiVersions.V2, "GetQRCode")]
-        public MessageModel<Bitmap> GetQRCode([FromBody] EntityValue entityValue)
+        [CustomRoute(ApiVersions.V2, "GetQRCodeBase64Str")]
+        public MessageModel<string> GetQRCodeBase64Str([FromBody] EntityQRCode entityValue)
         {
-            var data = new MessageModel<Bitmap>();
+            var data = new MessageModel<string>();
             try
             {
-                data.Response = HelperBitmap.CreatQRCode(entityValue.Value);
+                entityValue.Scale = 4;
+                entityValue.Version = 8;
+                MemoryStream memory = new MemoryStream();
+                var bmp = HelperBitmap.CreatQRCode(entityValue);
+                bmp.Save(memory, ImageFormat.Bmp);
+                data.Response = Convert.ToBase64String(memory.ToArray());
                 data.Success = true;
             }
             catch (Exception ex)
