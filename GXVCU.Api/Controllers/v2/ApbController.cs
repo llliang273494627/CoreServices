@@ -4,6 +4,7 @@ using System.Drawing;
 using GXVCU.Api.Comm;
 using GXVCU.Common;
 using GXVCU.Common.Helper;
+using GXVCU.Common.SettingEntity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -61,12 +62,12 @@ namespace GXVCU.Api.Controllers.v2
         /// <returns></returns>
         [HttpPost]
         [CustomRoute(ApiVersions.V2, "GetQRCode")]
-        public MessageModel<Bitmap> GetQRCode(string qRCode)
+        public MessageModel<Bitmap> GetQRCode([FromBody] EntityValue entityValue)
         {
             var data = new MessageModel<Bitmap>();
             try
             {
-                data.Response = HelperBitmap.CreatQRCode(qRCode);
+                data.Response = HelperBitmap.CreatQRCode(entityValue.Value);
                 data.Success = true;
             }
             catch (Exception ex)
