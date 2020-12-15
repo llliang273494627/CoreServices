@@ -35,12 +35,31 @@ namespace GXVCU.Api.Comm
                     {
                         if (context.Request.Path.Value.ToLower().Contains(itme))
                         {
+                            context.Request.EnableBuffering();
+                            Stream originalBody = context.Response.Body;
+
                             var request = context.Request;
                             var url = $"{ request.Host }{ request.Path}，{ request.Method}";
                             var queryStr = request.QueryString;
-                            var content = $" QueryData：http://{url}\r\n QueryString：{queryStr}";
-                            _logger.LogWarning(content);
-                            break;
+                            var bodyStr =await new StreamReader(request.Body).ReadToEndAsync();
+
+                            System.Text.StringBuilder builder = new System.Text.StringBuilder();
+                            builder.Append($"Url：{url}\r\n");
+                            if (!string.IsNullOrEmpty(queryStr.Value))
+                                builder.Append($"Parameters：{queryStr}\r\n");
+                            if (!string.IsNullOrEmpty(bodyStr))
+                                builder.Append($"Body：{bodyStr}\r\n");
+                            
+                            request.Body.Position = 0;
+                            using (var ms = new MemoryStream()) 
+                            {
+                                context.Response.Body = ms;
+                                await _next(context);
+                                ms.Position = 0;
+                                await ms.CopyToAsync(originalBody);
+                            }
+                            _logger.LogWarning(builder.ToString());
+                            return;
                         }
                     }
                 }
