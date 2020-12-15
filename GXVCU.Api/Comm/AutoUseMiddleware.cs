@@ -44,7 +44,7 @@ namespace GXVCU.Api.Comm
                             var bodyStr =await new StreamReader(request.Body).ReadToEndAsync();
 
                             System.Text.StringBuilder builder = new System.Text.StringBuilder();
-                            builder.Append($"Url：{url}\r\n");
+                            builder.Append($"Url：http://{url}\r\n");
                             if (!string.IsNullOrEmpty(queryStr.Value))
                                 builder.Append($"Parameters：{queryStr}\r\n");
                             if (!string.IsNullOrEmpty(bodyStr))
