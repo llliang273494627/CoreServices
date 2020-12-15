@@ -31,6 +31,31 @@ namespace GXVCU.Api.Controllers.v2
         }
 
         /// <summary>
+        /// 获取本机安装的打印机名称
+        /// </summary>
+        /// <param name="entityValue"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [CustomRoute(ApiVersions.V2, "GetPrintNames")]
+        public MessageModel<string[]> GetPrintNames()
+        {
+            var data = new MessageModel<string[]>();
+            try
+            {
+                data.Response =new HelperPrintDocument().GetPrintNames();
+                data.Success = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                data.Success = false;
+                data.Response = null;
+                data.Msg = ex.Message;
+            }
+            return data;
+        }
+
+        /// <summary>
         /// 打印测试
         /// </summary>
         /// <param name="entityBitmap"></param>
@@ -58,6 +83,34 @@ namespace GXVCU.Api.Controllers.v2
         }
 
         /// <summary>
+        /// 获取条码Base64Str
+        /// </summary>
+        /// <param name="entityValue"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [CustomRoute(ApiVersions.V2, "GetCodeBase64Str")]
+        public MessageModel<string> GetCodeBase64Str([FromBody] EntityQRCode entityValue)
+        {
+            var data = new MessageModel<string>();
+            try
+            {
+                MemoryStream memory = new MemoryStream();
+                var bmp = HelperCode.DefaultCode(entityValue.Value);
+                bmp.Save(memory, ImageFormat.Bmp);
+                data.Response = Convert.ToBase64String(memory.ToArray());
+                data.Success = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                data.Success = false;
+                data.Response = null;
+                data.Msg = ex.Message;
+            }
+            return data;
+        }
+
+        /// <summary>
         /// 获取二维码Base64Str
         /// </summary>
         /// <param name="entityValue"></param>
@@ -69,10 +122,8 @@ namespace GXVCU.Api.Controllers.v2
             var data = new MessageModel<string>();
             try
             {
-                entityValue.Scale = 4;
-                entityValue.Version = 8;
                 MemoryStream memory = new MemoryStream();
-                var bmp = HelperBitmap.CreatQRCode(entityValue);
+                var bmp = HelperCode.DefaultQRCode(entityValue.Value);
                 bmp.Save(memory, ImageFormat.Bmp);
                 data.Response = Convert.ToBase64String(memory.ToArray());
                 data.Success = true;

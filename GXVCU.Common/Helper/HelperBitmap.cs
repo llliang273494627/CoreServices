@@ -39,7 +39,7 @@ namespace GXVCU.Common.Helper
                 gs.DrawString(entity.Num, new Font("华为宋体", 21), Brushes.Black, rectangle.X + 65, rectangle.Y + 15);
                 // 条码
                 rectangle = new Rectangle(mainRec.X + 8, mainRec.Y + 100, 560, 60);
-                var code = CreatCode(entity.CodeText, 560, 60);
+                var code =HelperCode.DefaultCode(entity.CodeText);
                 if (code != null)
                     gs.DrawImage(code, rectangle);
                 // 虚线及以下
@@ -57,59 +57,6 @@ namespace GXVCU.Common.Helper
             return bitmap;
         }
 
-        /// <summary>
-        /// 生成条码
-        /// </summary>
-        /// <param name="text"></param>
-        public static Bitmap CreatCode(string text, int width, int herght)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(text))
-                    text = " ";
-                EncodingOptions options = new EncodingOptions()
-                {
-                    Width = width,
-                    Height = herght,
-                };
-                BarcodeWriter writer = new BarcodeWriter();
-                //使用ITF 格式，不能被现在常用的支付宝、微信扫出来
-                //如果想生成可识别的可以使用 CODE_128 格式
-                //writer.Format = BarcodeFormat.ITF;
-                writer.Format = BarcodeFormat.CODE_128;
-                writer.Options = options;
-                Bitmap map = writer.Write(text.Replace("@@", "+"));
-                return map;
-            }
-            catch (Exception ex)
-            {
-                HelperLog.Error("生成条码失败！", ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// 生成二维码条码
-        /// </summary>
-        /// <param name="text"></param>
-        public static Bitmap CreatQRCode(EntityQRCode entityQR)
-        {
-            try
-            {
-                QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
-                qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
-                qrCodeEncoder.QRCodeScale = entityQR.Scale;
-                qrCodeEncoder.QRCodeVersion = entityQR.Version;
-                qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
-                Bitmap image = qrCodeEncoder.Encode(entityQR.Value);
-                return image;
-            }
-            catch (Exception ex)
-            {
-                HelperLog.Error("生成二维码码失败！", ex);
-                return null;
-            }
-        }
     }
 
     public class EntityBitmapLHGQ
