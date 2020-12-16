@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GXVCU.Common.Helper;
+using GXVCU.Common.SettingEntity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace GXVCU.Api.Comm
+namespace GXVCU.Common
 {
     /// <summary>
     /// 全局监控
@@ -15,22 +16,26 @@ namespace GXVCU.Api.Comm
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<AutoUseMiddleware> _logger;
-        private readonly Appsettings _appsettings;
+        private readonly HelperAppsettings _appsettings;
 
         public AutoUseMiddleware(RequestDelegate next, ILogger<AutoUseMiddleware> logger)
         {
             _next = next;
             _logger = logger;
-            _appsettings = new Appsettings(Directory.GetCurrentDirectory());
+            _appsettings = new HelperAppsettings(Directory.GetCurrentDirectory());
         }
+
+        public static string Host { get; set; }
 
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                if (_appsettings.Middleware.Enabled)
+                Host= $"http://{ context.Request.Host}/";
+                var middleware = _appsettings.GetNodeEntity<EntityMiddleware>("Middleware");
+                if (middleware != null && middleware.Enabled)
                 {
-                    string[] apis = _appsettings.Middleware.IgnoreApis.Split(',');
+                    string[] apis = middleware.IgnoreApis.Split(',');
                     foreach (string itme in apis)
                     {
                         if (context.Request.Path.Value.ToLower().Contains(itme))
@@ -41,17 +46,17 @@ namespace GXVCU.Api.Comm
                             var request = context.Request;
                             var url = $"{ request.Host }{ request.Path}，{ request.Method}";
                             var queryStr = request.QueryString;
-                            var bodyStr =await new StreamReader(request.Body).ReadToEndAsync();
+                            var bodyStr = await new StreamReader(request.Body).ReadToEndAsync();
 
-                            System.Text.StringBuilder builder = new System.Text.StringBuilder();
-                            builder.Append($"Url：http://{url}\r\n");
+                            StringBuilder builder = new StringBuilder();
+                            builder.Append($"Url：http://{url}");
                             if (!string.IsNullOrEmpty(queryStr.Value))
-                                builder.Append($"Parameters：{queryStr}\r\n");
+                                builder.Append($"\r\nParameters：{queryStr}");
                             if (!string.IsNullOrEmpty(bodyStr))
-                                builder.Append($"Body：{bodyStr}\r\n");
-                            
+                                builder.Append($"\r\nBody：{bodyStr}");
+
                             request.Body.Position = 0;
-                            using (var ms = new MemoryStream()) 
+                            using (var ms = new MemoryStream())
                             {
                                 context.Response.Body = ms;
                                 await _next(context);

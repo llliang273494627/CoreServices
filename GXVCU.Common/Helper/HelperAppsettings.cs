@@ -1,16 +1,26 @@
-﻿using GXVCU.Common.DB;
-using GXVCU.Common.SettingEntity;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace GXVCU.Common.Helper
 {
    public class HelperAppsettings
     {
-        private readonly IConfiguration _configuration;
+        protected IConfiguration _configuration;
+
+        public HelperAppsettings()
+        {
+            string contentPath = Directory.GetCurrentDirectory();
+            string Path = "appsettings.json";
+
+            //如果你把配置文件 是 根据环境变量来分开了，可以这样写
+            //Path = $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json";
+            _configuration = new ConfigurationBuilder()
+               .SetBasePath(contentPath)
+               .Add(new JsonConfigurationSource { Path = Path, Optional = false, ReloadOnChange = true })//这样的话，可以直接读目录里的json文件，而不是 bin 文件夹下的，所以不用修改复制属性
+               .Build();
+        }
 
         public HelperAppsettings(IConfiguration configuration)
         {
@@ -23,15 +33,35 @@ namespace GXVCU.Common.Helper
         /// <param name="contentPath">配置文件所在文件夹路径</param>
         public HelperAppsettings(string contentPath)
         {
-            string Path = "appsettings.json";
+            try
+            {
+                string fileDir = Path.GetDirectoryName(contentPath);
+                string fileName = Path.GetFileName(contentPath);
+                string fileExtension = Path.GetExtension(contentPath);
+                if (string.IsNullOrEmpty(fileExtension) || fileExtension.ToLower() != ".json")
+                {
+                    fileDir = Directory.GetCurrentDirectory();
+                    fileName = "appsettings.json";
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(fileDir))
+                    {
+                        fileDir = Directory.GetCurrentDirectory();
+                    }
+                }
 
-            //如果你把配置文件 是 根据环境变量来分开了，可以这样写
-            //Path = $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json";
-
-            _configuration = new ConfigurationBuilder()
-               .SetBasePath(contentPath)
-               .Add(new JsonConfigurationSource { Path = Path, Optional = false, ReloadOnChange = true })//这样的话，可以直接读目录里的json文件，而不是 bin 文件夹下的，所以不用修改复制属性
-               .Build();
+                //如果你把配置文件 是 根据环境变量来分开了，可以这样写
+                //Path = $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json";
+                _configuration = new ConfigurationBuilder()
+                   .SetBasePath(fileDir)
+                   .Add(new JsonConfigurationSource { Path = fileName, Optional = false, ReloadOnChange = true })//这样的话，可以直接读目录里的json文件，而不是 bin 文件夹下的，所以不用修改复制属性
+                   .Build();
+            }
+            catch (Exception ex)
+            {
+                HelperLog.Error<HelperAppsettings>($"json配置文件异常！contentPath={contentPath}", ex);
+            }
         }
 
         /// <summary>
@@ -47,7 +77,7 @@ namespace GXVCU.Common.Helper
             }
             catch (Exception ex)
             {
-                HelperLog.Error($"获取配置参数失败！nodeName={nodeName}", ex);
+                HelperLog.Error<HelperAppsettings>($"获取配置参数失败！nodeName={nodeName}", ex);
             }
             return string.Empty;
         }
@@ -65,7 +95,7 @@ namespace GXVCU.Common.Helper
             }
             catch (Exception ex)
             {
-                HelperLog.Error($"获取配置参数失败！nodeName={nodeName}", ex);
+                HelperLog.Error<HelperAppsettings>($"获取配置参数失败！nodeName={nodeName}", ex);
             }
             return default(T);
         }

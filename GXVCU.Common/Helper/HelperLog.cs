@@ -18,5 +18,15 @@ namespace GXVCU.Common.Helper
         {
             logger.Error(message);
         }
+
+        public static void Error<T>(object message, Exception exception)
+        {
+            LogManager.GetLogger(typeof(T)).Error(message, exception);
+        }
+
+        public static void Error<T>(object message)
+        {
+            LogManager.GetLogger(typeof(T)).Error(message);
+        }
     }
 }

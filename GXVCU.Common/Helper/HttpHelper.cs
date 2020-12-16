@@ -38,7 +38,7 @@ namespace GXVCU.Common.Helper
             }
             catch (Exception ex)
             {
-                HelperLog.Error("Get请求失败！", ex);
+                HelperLog.Error($"Get请求失败！url={url},pragm={pragm}", ex);
             }
             return default(T);
         }
@@ -50,7 +50,7 @@ namespace GXVCU.Common.Helper
         /// <param name="url">完整的url</param>
         /// <param name="body">post body,可以匿名或者反序列化</param>
         /// <returns></returns>
-        public static T PostApi<T>(string url, object body = null)
+        public async static Task<T> PostApi<T>(string url, object body = null)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace GXVCU.Common.Helper
                 };
                 queest.AddHeader("Accept", "application/json");
                 queest.AddJsonBody(body);
-                var result = client.Execute(queest);
+                var result = await client.ExecuteAsync(queest);
                 if (result.StatusCode != HttpStatusCode.OK)
                 {
                     return (T)Convert.ChangeType(result.ErrorMessage, typeof(T));
@@ -71,21 +71,28 @@ namespace GXVCU.Common.Helper
             }
             catch (Exception ex)
             {
-                HelperLog.Error("Get请求失败！", ex);
+                HelperLog.Error($"POST请求失败！url={url},body={Newtonsoft.Json.JsonConvert.SerializeObject(body)}", ex);
             }
             return default(T);
         }
 
+        /// <summary>
+        /// .net 3.5 版本
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
         public static string RequestPost(string url, object body)
         {
             string ponseStr = string.Empty;
+            string bodyStr = string.Empty;
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
-                string bodyStr = Newtonsoft.Json.JsonConvert.SerializeObject(body);
+                bodyStr = Newtonsoft.Json.JsonConvert.SerializeObject(body);
                 byte[] bys = System.Text.ASCIIEncoding.ASCII.GetBytes(bodyStr);
                 request.ContentLength = bys.Length;
 
@@ -107,11 +114,16 @@ namespace GXVCU.Common.Helper
             }
             catch (Exception ex)
             {
-                ponseStr = ex.Message;
+                HelperLog.Error($"POST请求失败！url={url},body={bodyStr}", ex);
             }
             return ponseStr;
         }
 
+        /// <summary>
+        /// .net 3.5 版本
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static string RequestGet(string url)
         {
             string ponseStr = string.Empty;
@@ -130,7 +142,7 @@ namespace GXVCU.Common.Helper
             }
             catch (Exception ex)
             {
-                ponseStr = ex.Message;
+                HelperLog.Error($"POST请求失败！url={url}", ex);
             }
             return ponseStr;
         }

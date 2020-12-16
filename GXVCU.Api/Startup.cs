@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using GXVCU.Api.Comm;
+using GXVCU.Common;
 using GXVCU.Common.DB;
 using GXVCU.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -9,9 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using SqlSugar;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace GXVCU.Api
 {

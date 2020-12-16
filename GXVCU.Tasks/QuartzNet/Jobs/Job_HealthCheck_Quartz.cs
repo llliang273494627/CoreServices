@@ -21,7 +21,7 @@ namespace GXVCU.Tasks.QuartzNet.Jobs
         public Job_HealthCheck_Quartz(ILogger<Job_HealthCheck_Quartz> logger)
         {
             _logger = logger;
-            _helperAppsettings = new HelperAppsettings(Directory.GetCurrentDirectory());
+            _helperAppsettings = new HelperAppsettings();
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -31,14 +31,18 @@ namespace GXVCU.Tasks.QuartzNet.Jobs
 
         private async Task DoWork(IJobExecutionContext context)
         {
-            string url = _helperAppsettings.GetNodeValue("UseUrls");
-            url += "/api/Values/HealthCheck";
-            var repone = await HttpHelper.GetApi<MessageModel<string>>(url);
-            if (repone == null || !repone.Success)
+            // 心跳包任务
+            if (!string.IsNullOrEmpty(AutoUseMiddleware.Host))
             {
-                Console.WriteLine($"连接服务失败！url={url}");
-                _logger.LogError($"连接服务失败！url={url}");
+                string url = AutoUseMiddleware.Host;
+                url += "api/Values/HealthCheck";
+                var repone = await HttpHelper.GetApi<MessageModel<string>>(url);
+                if (repone == null || !repone.Success)
+                {
+                    Console.WriteLine($"连接服务失败！url={url}");
+                }
             }
+
         }
 
 
