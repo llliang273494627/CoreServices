@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using GXVCU.Api.Comm;
 using GXVCU.Common;
+using GXVCU.Common.FromBodys;
 using GXVCU.Common.Helper;
-using GXVCU.Common.SettingEntity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -89,7 +88,7 @@ namespace GXVCU.Api.Controllers.v2
         /// <returns></returns>
         [HttpPost]
         [CustomRoute(ApiVersions.V2, "GetCodeBase64Str")]
-        public MessageModel<string> GetCodeBase64Str([FromBody] EntityQRCode entityValue)
+        public MessageModel<string> GetCodeBase64Str([FromBody] BodyQRCode entityValue)
         {
             var data = new MessageModel<string>();
             try
@@ -117,7 +116,7 @@ namespace GXVCU.Api.Controllers.v2
         /// <returns></returns>
         [HttpPost]
         [CustomRoute(ApiVersions.V2, "GetQRCodeBase64Str")]
-        public MessageModel<string> GetQRCodeBase64Str([FromBody] EntityQRCode entityValue)
+        public MessageModel<string> GetQRCodeBase64Str([FromBody] BodyQRCode entityValue)
         {
             var data = new MessageModel<string>();
             try

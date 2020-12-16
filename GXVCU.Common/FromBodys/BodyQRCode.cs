@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GXVCU.Common.SettingEntity
+namespace GXVCU.Common.FromBodys
 {
     /// <summary>
     /// 二维码实体
     /// </summary>
-    public class EntityQRCode
+    public class BodyQRCode
     {
         /// <summary>
         /// 参数

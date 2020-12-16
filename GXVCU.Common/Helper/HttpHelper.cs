@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Net;
 using System.Text;
 
@@ -56,6 +57,65 @@ namespace GXVCU.Common.Helper
             }
             dynamic temp = Newtonsoft.Json.JsonConvert.DeserializeObject(result.Content, typeof(T));
             return (T)temp;
+        }
+
+        public static string RequestPost(string url, object body)
+        {
+            string ponseStr = string.Empty;
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.ContentType = "application/json";
+                request.Method = "POST";
+
+                string bodyStr = Newtonsoft.Json.JsonConvert.SerializeObject(body);
+                byte[] bys = System.Text.ASCIIEncoding.ASCII.GetBytes(bodyStr);
+                request.ContentLength = bys.Length;
+
+                using (Stream requestSream = request.GetRequestStream())
+                {
+                    requestSream.Write(bys, 0, bys.Length);
+                    requestSream.Flush();
+                    requestSream.Close();
+                }
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                using (Stream receiveStream = response.GetResponseStream())
+                {
+                    StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                    ponseStr = readStream.ReadToEnd();
+                    readStream.Close();
+                    receiveStream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ponseStr = ex.Message;
+            }
+            return ponseStr;
+        }
+
+        public static string RequestGet(string url)
+        {
+            string ponseStr = string.Empty;
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                using (Stream receiveStream = response.GetResponseStream())
+                {
+                    StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                    ponseStr = readStream.ReadToEnd();
+                    readStream.Close();
+                    receiveStream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ponseStr = ex.Message;
+            }
+            return ponseStr;
         }
     }
 }

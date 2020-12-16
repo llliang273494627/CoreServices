@@ -65,6 +65,46 @@ namespace GXVCU.Common.DB
         }
 
         /// <summary>
+        /// 创建指定表
+        /// </summary>
+        /// <returns></returns>
+        public MessageModel<string> CreateAppointDataBase(string TbNamespace)
+        {
+            var data = new MessageModel<string>() { Success = false, };
+            try
+            {
+                _sqlSugarClient.DbMaintenance.CreateDatabase();
+                _logger.LogInformation("创建数据库");
+                //var modelTypes = from t in Assembly.GetExecutingAssembly().GetTypes()
+                //                 where t.IsClass && t.Namespace == "GXVCU.Model.Models"
+                //                 select t;
+                var modelTypes = from t in Assembly.GetAssembly(typeof(TasksQz)).GetTypes()
+                                 where t.IsClass && t.Namespace == TbNamespace
+                                 select t;
+                _logger.LogInformation("获取数据库表实体数：" + modelTypes.ToList().Count);
+                modelTypes.ToList().ForEach(t =>
+                {
+                    if (!_sqlSugarClient.DbMaintenance.IsAnyTable(t.Name))
+                    {
+                        Console.WriteLine(t.Name);
+                        _sqlSugarClient.CodeFirst.InitTables(t);
+                        _logger.LogInformation("创建表：" + t.Name);
+                    }
+                });
+                data.Success = true;
+                data.Msg = "创建数据库完成";
+                _logger.LogInformation(data.Msg);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "创建数据库失败");
+                data.Success = false;
+                data.Msg = ex.Message;
+            }
+            return data;
+        }
+
+        /// <summary>
         /// 添加种子数据
         /// </summary>
         /// <param name="dirPath">种子数据文件夹</param>

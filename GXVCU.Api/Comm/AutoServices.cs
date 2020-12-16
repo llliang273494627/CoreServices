@@ -54,6 +54,7 @@ namespace GXVCU.Api.Comm
             // 临时服务，每次请求时会创建一个新的服务
             services.AddTransient<TasksQzServices>();
             services.AddTransient<LogDetailsServices>();
+            services.AddTransient<PublicSqlServices>();
             
         }
 

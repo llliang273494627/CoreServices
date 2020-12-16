@@ -90,6 +90,17 @@ namespace GXVCU.Api.Controllers
         }
 
         /// <summary>
+        /// 创建指定表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [CustomRoute(ApiVersions.V1, "CreateAppointDataBase")]
+        public MessageModel<string> CreateAppointDataBase([FromBody] BodyTableSpace entity)
+        {
+            return _dBSeed.CreateAppointDataBase(entity.NameSpace);
+        }
+
+        /// <summary>
         /// 获取数据库表实体
         /// </summary>
         /// <returns></returns>
