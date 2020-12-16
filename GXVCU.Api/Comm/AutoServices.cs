@@ -68,7 +68,7 @@ namespace GXVCU.Api.Comm
 
             // 首次创建(单例模式)
             services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddSingleton<Job_Blogs_Quartz>();
+            services.AddSingleton<Job_HealthCheck_Quartz>();
             services.AddSingleton<SchedulerCenterServer>();
         }
 

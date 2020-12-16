@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GXVCU.Common.Helper
 {
@@ -21,17 +22,25 @@ namespace GXVCU.Common.Helper
         /// <param name="url">接口:api/xx/yy</param>
         /// <param name="pragm">参数:id=2&name=老张</param>
         /// <returns></returns>
-        public static T GetApi<T>(string url, string pragm = "")
+        public async static Task<T> GetApi<T>(string url, string pragm = "")
         {
-            var client = new RestClient(url);
-            url = string.IsNullOrEmpty(pragm) ? string.Empty : $"{url}?{pragm}";
-            var request = client.Execute(new RestRequest(url, Method.GET));
-            if (request.StatusCode != HttpStatusCode.OK)
+            try
             {
-                return (T)Convert.ChangeType(request.ErrorMessage, typeof(T));
+                var client = new RestClient(url);
+                url = string.IsNullOrEmpty(pragm) ? string.Empty : $"{url}?{pragm}";
+                var request = await client.ExecuteAsync(new RestRequest(url, Method.GET));
+                if (request.StatusCode != HttpStatusCode.OK)
+                {
+                    return (T)Convert.ChangeType(request.ErrorMessage, typeof(T));
+                }
+                dynamic temp = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Content, typeof(T));
+                return (T)temp;
             }
-            dynamic temp = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Content, typeof(T));
-            return (T)temp;
+            catch (Exception ex)
+            {
+                HelperLog.Error("Get请求失败！", ex);
+            }
+            return default(T);
         }
 
         /// <summary>
@@ -43,20 +52,28 @@ namespace GXVCU.Common.Helper
         /// <returns></returns>
         public static T PostApi<T>(string url, object body = null)
         {
-            var client = new RestClient($"{url}");
-            IRestRequest queest = new RestRequest
+            try
             {
-                Method = Method.POST,
-            };
-            queest.AddHeader("Accept", "application/json");
-            queest.AddJsonBody(body);
-            var result = client.Execute(queest);
-            if (result.StatusCode != HttpStatusCode.OK)
-            {
-                return (T)Convert.ChangeType(result.ErrorMessage, typeof(T));
+                var client = new RestClient($"{url}");
+                IRestRequest queest = new RestRequest
+                {
+                    Method = Method.POST,
+                };
+                queest.AddHeader("Accept", "application/json");
+                queest.AddJsonBody(body);
+                var result = client.Execute(queest);
+                if (result.StatusCode != HttpStatusCode.OK)
+                {
+                    return (T)Convert.ChangeType(result.ErrorMessage, typeof(T));
+                }
+                dynamic temp = Newtonsoft.Json.JsonConvert.DeserializeObject(result.Content, typeof(T));
+                return (T)temp;
             }
-            dynamic temp = Newtonsoft.Json.JsonConvert.DeserializeObject(result.Content, typeof(T));
-            return (T)temp;
+            catch (Exception ex)
+            {
+                HelperLog.Error("Get请求失败！", ex);
+            }
+            return default(T);
         }
 
         public static string RequestPost(string url, object body)
