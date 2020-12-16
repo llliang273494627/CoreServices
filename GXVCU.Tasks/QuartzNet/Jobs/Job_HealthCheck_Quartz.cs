@@ -36,7 +36,8 @@ namespace GXVCU.Tasks.QuartzNet.Jobs
             var repone = await HttpHelper.GetApi<MessageModel<string>>(url);
             if (repone == null || !repone.Success)
             {
-                _logger.LogError(repone.Msg);
+                Console.WriteLine($"连接服务失败！url={url}");
+                _logger.LogError($"连接服务失败！url={url}");
             }
         }
 
