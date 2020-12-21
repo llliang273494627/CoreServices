@@ -1,0 +1,1 @@
+1.dotnet-hosting-5.0.1-win.exe ： 发布IIS，需要的core模板
