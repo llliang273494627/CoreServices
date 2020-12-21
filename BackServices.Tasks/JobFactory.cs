@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
 using System;
@@ -16,6 +17,8 @@ namespace BackServices.Tasks
         /// 注入反射获取依赖对象
         /// </summary>
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<JobFactory> _logger;
+
         public JobFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -37,7 +40,8 @@ namespace BackServices.Tasks
             }
             catch (Exception e)
             {
-                throw e;
+                _logger.LogError(e, "实现接口Job异常");
+                return null;
             }
         }
 
