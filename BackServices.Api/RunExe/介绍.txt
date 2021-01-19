@@ -1,0 +1,4 @@
+InstallerProjects.vsix：是一个VS插件，用于桌面程序开发的安装程序项目在VS2019的管理扩展搜索不到，则用这个安装包
+                                 https://blog.csdn.net/weixin_38211198/article/details/98481688
+
+dotnet-hosting-5.0.1-win.exe ： 发布IIS，需要的core模板

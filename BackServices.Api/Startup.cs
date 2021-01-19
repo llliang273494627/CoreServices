@@ -69,9 +69,7 @@ namespace BackServices.Api
                     },
                     MoreSettings = new ConnMoreSettings()
                     {
-                        //IsWithNoLockQuery = true,
                         IsAutoRemoveDataCache = true,
-                        PgSqlIsAutoToLower=false,// 针对 PostgreSQL 数据库大小写问题
                     },
                     // 从库
                     //SlaveConnectionConfigs = listConfig_Slave,
