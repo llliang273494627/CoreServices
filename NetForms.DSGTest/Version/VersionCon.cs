@@ -11,7 +11,8 @@ namespace NetForms.DSGTest.Version
             IVersion version = null;
             switch (NetCommon.AppSettings.Version)
             {
-                case "":
+                case VersionV11.Version:
+                    version = new VersionV11();
                     break;
                 default:
                     version = new VersionV11();
